@@ -11,9 +11,12 @@ import {
   ControlPosition
 } from '@vis.gl/react-google-maps';
 
+
+
 import MyNavBar from './NavBar.jsx'
 import ItemList from './ItemList.jsx'
 import SearchBar from './SearchBar.jsx'
+import Filter from './Filter.jsx'
 
 function App() {
   const [locations, setLocations] = useState([]);
@@ -22,6 +25,13 @@ function App() {
     const response = await axios.get("http://127.0.0.1:8080/api/locations");// follow this link and will show json of locations
     console.log(response.data.aggie_express); // if you go into inspect and see the console log itll show this
     setLocations(response.data.location);
+    const aggieExpressLocations = response.data.aggie_express; // Fetching data and putting in array
+
+    aggieExpressLocations.array.forEach(location => {
+      console.log(`${location.building}`)
+    });
+
+    setLocations(aggieExpressLocations);
   };
 
   useEffect(() => {
@@ -39,6 +49,7 @@ function App() {
     
     <ItemList/>
     <SearchBar/>
+    <Filter/>
     <APIProvider apiKey={'AIzaSyCG726Rj10Q_Oq4OT_FgF0HStvJ0gLT2Tk'}>
       <div className='map-container'> 
         <Map 
@@ -49,7 +60,9 @@ function App() {
         gestureHandling={'greedy'} // allows it to be moveable
         >
           <MapControl position={ControlPosition.LEFT_BOTTOM}></MapControl>
-          <AdvancedMarker position={position} onClick={() => setOpen(true)}>
+          <AdvancedMarker 
+          position={position} 
+          onClick={() => setOpen(true)}>
             <Pin
               background={"maroon"}
               glyphColor={"grey"}

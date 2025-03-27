@@ -2,6 +2,18 @@ from flask import Flask, render_template, jsonify
 import json
 import os
 from flask_cors import CORS
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+
+uri = "mongodb+srv://eshaandbalsara:LancePM122524@finditam.m9syb.mongodb.net/?retryWrites=true&w=majority&appName=FindItAM"
+
+client = MongoClient(uri, server_api=ServerApi('1'))
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
 
 app = Flask(__name__)
 cors = CORS(app, origins='*')

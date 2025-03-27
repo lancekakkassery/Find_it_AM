@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import axios from "axios"
 import React from 'react'
-
 function ItemList() {
   const [items, setItems] = useState([]);
   //fetching items, this can be replaced with an API call instead
@@ -27,7 +26,7 @@ function ItemList() {
               </div>
               <div className='item-location'>
                 <strong>Location:</strong> {item.location}
-              </div>
+              </div>     
             </div>
           ))}
         </div>
