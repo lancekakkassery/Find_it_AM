@@ -1,75 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import axios from "axios"; // if needed for API calls
-import { Modal, Button } from 'react-bootstrap'; // import Modal and Button from react-bootstrap
-import './App.css';
 
-function ItemList() {
-  const [items, setItems] = useState([]);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+import { useState, useEffect } from 'react'
+import './App.css'
+import axios from "axios"
+import React from 'react'
+import ItemDetail from './ItemDetail.jsx'
 
-  // Simulated fetching of items (can be replaced with an API call)
-  useEffect(() => {
-    const fetchItems = [
-      { id: 1, title: "Microwave", description: "Adjacent to Evans Library and Annex", location: "Commons Hall" },
-      { id: 2, title: "Vending Machine", description: "Adjacent to Evans Library and Annex", location: "Evans Library" },
-    ];
-    setItems(fetchItems);
-  }, []);
+function ItemList({ items = [], loading = false }) {
+    const [selectedItem, setSelectedItem] = useState(null);
 
-  // Handler when an item is clicked
-  const handleItemClick = (item) => {
-    setSelectedItem(item);
-    setShowModal(true);
-  };
+    // Format time (using a placeholder for now)
+    const formatTime = () => {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const ampm = hours >= 12 ? 'AM' : 'AM'; // Always AM for the demo
+        const formattedHours = hours % 12 || 12;
+        return `${formattedHours}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
+    };
 
-  // Handler to close the modal
-  const handleClose = () => {
-    setShowModal(false);
-    setSelectedItem(null);
-  };
+    const handleItemClick = (item) => {
+        setSelectedItem(item);
+    };
 
-  return (
-    <div className='item-container'>
-      <h2>Items Found</h2>
-      <div className='items-list'>
-        {items.map((item) => (
-          <div 
-            key={item.id} 
-            className='item-card' 
-            onClick={() => handleItemClick(item)}
-            style={{cursor: 'pointer'}} // indicates the item is clickable
-          >
-            <div className='item-header'>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
+    const closeItemDetail = () => {
+        setSelectedItem(null);
+    };
+
+    return (
+        <>
+            <div className='item-list'>
+                <h2>Items Found:</h2>
+                {loading ? (
+                    <p>Loading items...</p>
+                ) : (
+                    <div className="items-container">
+                        {items.length > 0 ? (
+                            items.map((item, index) => (
+                                <div key={index} className="item-card" onClick={() => handleItemClick(item)}>
+                                    <div className="item-icon">
+                                        <img src="https://via.placeholder.com/40" alt="Item" />
+                                    </div>
+                                    <div className="item-details">
+                                        <h3 className="item-title">
+                                            {item.name || (item.tag ? `${item.tag} ${index + 1}` : `Item ${index + 1}`)}
+                                        </h3>
+                                        <p className="item-description">
+                                            {item.description || (item.location && item.location.building 
+                                                ? `${item.location.building}${item.location.room ? ', Room ' + item.location.room : ''}` 
+                                                : `Description`)}
+                                        </p>
+                                    </div>
+                                    <div className="item-time">
+                                        {formatTime()}
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No items found</p>
+                        )}
+                    </div>
+                )}
             </div>
-            <div className='item-location'>
-              <strong>Location:</strong> {item.location}
-            </div>     
-          </div>
-        ))}
-      </div>
-
-      {/* Modal from boostrap for displaying item details */}
-      {selectedItem && (
-        <Modal show={showModal} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>{selectedItem.title}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p><strong>Description:</strong> {selectedItem.description}</p>
-            <p><strong>Location:</strong> {selectedItem.location}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
-    </div>
-  );
+            
+            {selectedItem && (
+                <ItemDetail item={selectedItem} onClose={closeItemDetail} />
+            )}
+        </>
+    );
 }
 
 export default ItemList;
