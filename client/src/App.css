@@ -50,7 +50,7 @@ body {
 /* Push the map down by the height of the navbar */
 }
 
-.item-list{
+.item-container{
   position:absolute;
   background-color:rgba(161, 138, 138, 0.7);  
   color: rgb(0, 0, 0);  
@@ -65,6 +65,51 @@ body {
   overflow-y: auto;
 }
 
+.item-container h2{
+  font-size: 1.5em;
+  color: maroon;
+  margin-bottom: 20px;
+}
+
+.items-list{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.item-card{
+  background-color:rgba(205, 201, 201, 0.7); 
+  border-radius: 25px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  opacity: 80%;
+  padding-left: 14px;
+  padding-top: 14px;
+  padding-bottom: 12px;
+  padding-right: 14px;
+}
+
+.item-header h3{
+  margin: 0;
+  font-size: 1.2em;
+  color: black;
+}
+
+.item-header p {
+  margin: 5px 0;
+  color: black;
+}
+
+.item-location {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: black;
+}
+
+.item-location strong{
+  color: black;
+}
+
 .search{
   position:absolute;
   background-color:rgba(181, 181, 181, 0.7);  
@@ -77,6 +122,7 @@ body {
   max-width: 320px;
   height: auto;
   left:0px;
+
   top: 60px;
 }
 
@@ -306,4 +352,5 @@ body {
   .item-detail-info {
     flex: 2;
   }
+
 }

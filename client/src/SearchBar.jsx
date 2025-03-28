@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import axios from "axios"
+import './SearchBar.css';
+//import axios from "axios"
 import React from 'react'
+
 
 function SearchBar({ onSearch, onFilterChange }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -99,3 +101,4 @@ function SearchBar({ onSearch, onFilterChange }) {
 }
 
 export default SearchBar;
+

@@ -4,6 +4,7 @@ from flask_pymongo import PyMongo
 from bson.json_util import dumps
 import os
 
+
 app = Flask(__name__)
 cors = CORS(app, origins='*')
 

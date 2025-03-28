@@ -11,9 +11,12 @@ import {
   ControlPosition
 } from '@vis.gl/react-google-maps';
 
+
+
 import MyNavBar from './NavBar.jsx'
 import ItemList from './ItemList.jsx'
 import SearchBar from './SearchBar.jsx'
+import Filter from './Filter.jsx'
 
 function App() {
   const [locations, setLocations] = useState([]);
@@ -28,6 +31,7 @@ function App() {
   });
   
   const fetchAPI = async () => {
+
     try {
       const response = await axios.get("http://127.0.0.1:8080/api/locations");
       console.log("API response:", response.data); 
@@ -38,6 +42,7 @@ function App() {
       console.error("Error fetching locations:", error);
       setIsLoading(false);
     }
+
   };
 
   useEffect(() => {
@@ -112,8 +117,10 @@ function App() {
   return ( 
     <>
     <MyNavBar/>     {/* NavBar wrapper from import on the top, (wrapper is a react component) */}
+
     <SearchBar onSearch={handleSearch} onFilterChange={handleFilterChange} />
     <ItemList items={filteredLocations} loading={isLoading} />
+
     <APIProvider apiKey={'AIzaSyCG726Rj10Q_Oq4OT_FgF0HStvJ0gLT2Tk'}>
       <div className='map-container'> 
         <Map 
@@ -124,6 +131,7 @@ function App() {
         gestureHandling={'greedy'} // allows it to be moveable
         >
           <MapControl position={ControlPosition.LEFT_BOTTOM}></MapControl>
+
           
           {/* Display markers for each item */}
           {markers.map((marker) => (
@@ -157,6 +165,7 @@ function App() {
             </AdvancedMarker>
           ))}
           
+
         </Map>
       </div>
     </APIProvider>
