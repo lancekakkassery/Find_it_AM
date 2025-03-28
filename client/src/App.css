@@ -50,7 +50,7 @@ body {
 /* Push the map down by the height of the navbar */
 }
 
-.item-container{
+.item-list{
   position:absolute;
   background-color:rgba(161, 138, 138, 0.7);  
   color: rgb(0, 0, 0);  
