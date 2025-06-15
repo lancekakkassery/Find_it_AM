@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
 import './SearchBar.css';
 //import axios from "axios"
 import React from 'react'
+import Accordion from "react-bootstrap/Accordion";
 
 
-function SearchBar({ onSearch, onFilterChange }) {
+function SearchBar({niches = [], onSearch, onFilterChange }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     colorNeeded: false,
@@ -21,21 +22,25 @@ function SearchBar({ onSearch, onFilterChange }) {
       onSearch(query);
     }
   };
-
-  const handleFilterChange = (filterName) => {
+  const handleClear = () => {
+    setSearchQuery("");
+    onSearch?.("");          // tell parent “no query”
+  };
+  
+    const toggle = (filterName) => {
     const updatedFilters = {
       ...filters,
-      [filterName]: !filters[filterName]
+      [filterName]: !filters[filterName],
     };
     setFilters(updatedFilters);
-    
+
     if (onFilterChange) {
       onFilterChange(updatedFilters);
     }
   };
 
   return (
-    <div className='search'>
+    <div className="search">
       <div className="search-container">
         <div className="search-input-container">
           <label htmlFor="search-input">Find:</label>
@@ -48,53 +53,75 @@ function SearchBar({ onSearch, onFilterChange }) {
               onChange={handleSearchChange}
               className="search-input"
             />
-            <button className="dropdown-button">▼</button>
+                <button
+                  type="button"
+                  className="clear-button"
+                  onClick={handleClear}
+                  aria-label="Clear search"
+                >
+                  x
+                </button>
+
           </div>
         </div>
 
-        <div className="specifications-section">
-          <h3>Specifications</h3>
-          
-          <div className="filter-option">
-            <input
-              type="checkbox"
-              id="color-needed"
-              checked={filters.colorNeeded}
-              onChange={() => handleFilterChange('colorNeeded')}
-            />
-            <label htmlFor="color-needed">Color needed?</label>
-          </div>
-          
-          <div className="filter-option">
-            <input
-              type="checkbox"
-              id="free-needed"
-              checked={filters.freeNeeded}
-              onChange={() => handleFilterChange('freeNeeded')}
-            />
-            <label htmlFor="free-needed">Free needed?</label>
-          </div>
-          
-          <div className="filter-option">
-            <input
-              type="checkbox"
-              id="less-than-20"
-              checked={filters.lessThan20Pgs}
-              onChange={() => handleFilterChange('lessThan20Pgs')}
-            />
-            <label htmlFor="less-than-20">Less than 20 Pgs</label>
-          </div>
-          
-          <div className="filter-option">
-            <input
-              type="checkbox"
-              id="more-than-20"
-              checked={filters.moreThan20Pgs}
-              onChange={() => handleFilterChange('moreThan20Pgs')}
-            />
-            <label htmlFor="more-than-20">More than 20 Pgs</label>
-          </div>
-        </div>
+        <Accordion flush alwaysOpen className="niche-accordion">
+        {niches.map((niche, i) => {
+          const title =
+            niche.charAt(0).toUpperCase() + niche.slice(1); /* pretty */
+          return (
+            <Accordion.Item eventKey={i} key={niche}>
+              <Accordion.Header>{title}</Accordion.Header>
+              <Accordion.Body>
+                {/* niche‑specific controls */}
+                {niche === "printer" && (
+                  <>
+                    <div className="filter-option">
+                      <input
+                        type="checkbox"
+                        checked={filters.colorNeeded}
+                        onChange={() => toggle("colorNeeded")}
+                      />
+                      <label>Color needed?</label>
+                    </div>
+                    <div className="filter-option">
+                      <input
+                        type="checkbox"
+                        checked={filters.freeNeeded}
+                        onChange={() => toggle("freeNeeded")}
+                      />
+                      <label>Free needed?</label>
+                    </div>
+                    <div className="filter-option">
+                      <input
+                        type="checkbox"
+                        checked={filters.lessThan20Pgs}
+                        onChange={() => toggle("lessThan20Pgs")}
+                      />
+                      <label>&lt; 20 pages</label>
+                    </div>
+                    <div className="filter-option">
+                      <input
+                        type="checkbox"
+                        checked={filters.moreThan20Pgs}
+                        onChange={() => toggle("moreThan20Pgs")}
+                      />
+                      <label>&ge; 20 pages</label>
+                    </div>
+                  </>
+                )}
+
+                {/* fall‑back for other niches */}
+                {niche !== "printer" && (
+                  <p className="mb-0 small text-muted">
+                    No niche‑specific filters… yet!
+                  </p>
+                )}
+              </Accordion.Body>
+            </Accordion.Item>
+          );
+        })}
+      </Accordion>
       </div>
     </div>
   );

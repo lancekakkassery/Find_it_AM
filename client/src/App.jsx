@@ -11,15 +11,15 @@ import {
   ControlPosition
 } from '@vis.gl/react-google-maps';
 
-
-
 import MyNavBar from './NavBar.jsx'
 import ItemList from './ItemList.jsx'
 import SearchBar from './SearchBar.jsx'
 import Filter from './Filter.jsx'
+import Sidebar from './Sidebar';
 
 function App() {
   const [locations, setLocations] = useState([]);
+  const [niches,    setNiches]    = useState([]);
   const [filteredLocations, setFilteredLocations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,8 +36,26 @@ function App() {
       const response = await axios.get("http://127.0.0.1:8080/api/locations");
       console.log("API response:", response.data); 
       setLocations(response.data);
+      setNiches([
+        ...new Set(
+          response.data.map((item) =>
+          (item.category || item.tag || "Uncategorized").toLowerCase()
+          )
+        ),
+      ]);
       setFilteredLocations(response.data);
       setIsLoading(false);
+      const cats = [
+        ...new Set(
+          response.data.map((doc) =>
+            // choose the field that actually exists in each document
+            (doc.tag || doc.category || doc.niche || "").toLowerCase()
+          )
+        ),
+      ].filter(Boolean);          // remove empty strings
+    
+      console.log("niches →", cats);   // <‑‑ look in DevTools
+      setNiches(cats);
     } catch (error) {
       console.error("Error fetching locations:", error);
       setIsLoading(false);
@@ -99,6 +117,17 @@ function App() {
   const [open, setOpen] = useState(false);
   const [zoom, setZoom] = useState(16);
   
+  //sidebar implementation 
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarVisible((prev) => !prev);
+  };
+
+  const closeSidebar = () => {
+    setSidebarVisible(false);
+  };
+
   // Create markers from filtered location data
   const markers = filteredLocations.map((item, index) => {
     if (item.location && item.location.latitude && item.location.longitude) {
@@ -116,9 +145,11 @@ function App() {
 
   return ( 
     <>
-    <MyNavBar/>     {/* NavBar wrapper from import on the top, (wrapper is a react component) */}
+    <MyNavBar toggleSidebar={toggleSidebar} />     {/* NavBar wrapper from import on the top, (wrapper is a react component) */}
 
-    <SearchBar onSearch={handleSearch} onFilterChange={handleFilterChange} />
+    <Sidebar show={sidebarVisible} onClose={closeSidebar}>
+  <SearchBar niches={niches} onSearch={handleSearch} onFilterChange={handleFilterChange} />
+</Sidebar>
     <ItemList items={filteredLocations} loading={isLoading} />
 
     <APIProvider apiKey={'AIzaSyCG726Rj10Q_Oq4OT_FgF0HStvJ0gLT2Tk'}>
@@ -129,6 +160,15 @@ function App() {
         defaultCenter={position} 
         mapId={"2811d00f86aaab58"} // google map id
         gestureHandling={'greedy'} // allows it to be moveable
+        options={{
+          disableDefaultUI: true,      // turns off virtually everything
+          // if you want to be more surgical, you can do:
+          // zoomControl: false,
+          // mapTypeControl: false,
+          // streetViewControl: false,
+          // fullscreenControl: false,
+          // keyboardShortcuts: false,
+        }}
         >
           <MapControl position={ControlPosition.LEFT_BOTTOM}></MapControl>
 

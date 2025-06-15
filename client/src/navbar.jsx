@@ -6,24 +6,14 @@ import { FaBars } from 'react-icons/fa';
 import logo from './assets/FindItLogo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function MyNavBar() {
+function MyNavBar({ toggleSidebar }) {
   return (
     <>
       <Navbar className="navbar-maroon sticky-top" style={{ backgroundColor: '#500000', zIndex:10}}>
-        <Container>
+        <Container fluid className="px-5">
 
-          <Navbar.Brand href="#home">
-            <Dropdown>
-              <Dropdown.Toggle variant="link" id="dropdown-custom-components" style={{ color: 'white' }}>
-                <FaBars /> {/* Hamburger icon */}
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                {/* Dropdown items */}
-                <Dropdown.Item href="#home">Home</Dropdown.Item>
-                <Dropdown.Item href="#other">Other</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+          <Navbar.Brand onClick={toggleSidebar} style={{ cursor: 'pointer', color: 'white' }}>
+                <FaBars size={28} /> {/* Hamburger icon */}
           </Navbar.Brand>
 
           {/* Center-aligned Logo */}
