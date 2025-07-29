@@ -1,6 +1,7 @@
 #root {
   margin: 0 auto;
   text-align: center;
+  width: 100vw;
 }
 
 .logo {
@@ -45,7 +46,7 @@ body {
 
 .map-container {
   height: 100vh; /* Full viewport height */
-  width: 100%;
+  width: flex;
 
 /* Push the map down by the height of the navbar */
 }
