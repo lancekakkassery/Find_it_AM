@@ -152,7 +152,7 @@ function App() {
 </Sidebar>
     <ItemList items={filteredLocations} loading={isLoading} />
 
-    <APIProvider apiKey={'AIzaSyCG726Rj10Q_Oq4OT_FgF0HStvJ0gLT2Tk'}>
+    <APIProvider apiKey={''}>
       <div className='map-container'> 
         <Map 
         zoom={zoom}
